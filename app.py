@@ -1,14 +1,21 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+from flask_cors import CORS
 import requests
 import requests_cache
 import openmeteo_requests
-from retry_requests import retry
+from openmeteo_requests import retry
 from datetime import date, timedelta, datetime
+import pickle
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": os.environ.get('APP_URL')}})
 
 def getFlightSchedules(origin, destination, departure_date):
-    url = "https://flight-info-api.p.rapidapi.com/schedules"
+    url = os.environ.get('X_RAPIDAPI_URL', '')
 
     querystring = {
         "CodeType":"IATA",
@@ -19,8 +26,8 @@ def getFlightSchedules(origin, destination, departure_date):
     }
 
     headers = {
-        "X-RapidAPI-Key": '90a9e29896mshc06e1816b7d9b53p143ee5jsn04550eb886b8',
-        "X-RapidAPI-Host": "flight-info-api.p.rapidapi.com"
+        "X-RapidAPI-Key": os.environ.get('X_RAPIDAPI_KEY', ''),
+        "X-RapidAPI-Host": os.environ.get('X_RAPIDAPI_HOST', '')
     }
 
     response = requests.get(url, headers=headers, params=querystring)
@@ -31,6 +38,9 @@ def parseFlightResponse(schedules):
     print(schedules)
     data = schedules['data']
 
+    if (len(data) > 10):
+        data = data[:10]
+
     formattedFlights = []
 
     for flight in data:
@@ -40,7 +50,7 @@ def parseFlightResponse(schedules):
         formattedFlight['destinationCode'] = flight['arrival']['airport']['iata']
         formattedFlight['departure_time'] = f"{flight['departure']['date']['utc']}T{flight['departure']['time']['utc']}"
         formattedFlight['arrival_time'] = f"{flight['arrival']['date']['utc']}T{flight['arrival']['time']['utc']}"
-        formattedFlight['carrier'] = flight['carrier']['iata']
+        formattedFlight['carrier'] = flight['carrier']
 
         formattedFlights.append(formattedFlight)
 
@@ -100,6 +110,7 @@ def fillWeatherInfoForFlight(flight):
 
     return flight
 
+
 @app.route('/predictions', methods=['POST'])
 def getPredictions():
     data = request.get_json()
@@ -123,5 +134,5 @@ def hello():
     return 'Flight Predictions API v1.0'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 
