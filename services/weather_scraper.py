@@ -36,7 +36,7 @@ def fetch_hourly_temperature(api, airport, start_date, end_date):
         "longitude": airport['long'],
         "start_date": start_date,
         "end_date": end_date,
-        "hourly": ["temperature_2m", "relative_humidity_2m", "dew_point_2m", "precipitation", "rain", "snowfall", "weather_code", "surface_pressure", "cloud_cover", "wind_speed_10m", "wind_direction_10m", "wind_direction_100m","weather_code"]
+        "hourly": ["temperature_2m", "relative_humidity_2m", "dew_point_2m", "precipitation", "rain", "snowfall", "weather_code", "surface_pressure", "cloud_cover", "wind_speed_10m", "wind_direction_10m", "wind_direction_100m"]
     }
     responses = api.weather_api(url, params=params)
 
@@ -57,7 +57,6 @@ def fetch_hourly_temperature(api, airport, start_date, end_date):
     hourly_wind_speed_10m = hourly.Variables(9).ValuesAsNumpy()
     hourly_wind_direction_10m = hourly.Variables(10).ValuesAsNumpy()
     hourly_wind_direction_100m = hourly.Variables(11).ValuesAsNumpy()
-    hourly_weather_code = hourly.Variables(12).ValuesAsNumpy()
 
     hourly_data = {"date": pd.date_range(
         start=pd.to_datetime(hourly.Time(), unit="s"),
@@ -77,7 +76,6 @@ def fetch_hourly_temperature(api, airport, start_date, end_date):
     hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
     hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
     hourly_data["wind_direction_100m"] = hourly_wind_direction_100m
-    hourly_data["weather_code"] = hourly_weather_code
     hourly_dataframe = pd.DataFrame(data=hourly_data)
     return hourly_dataframe
 
