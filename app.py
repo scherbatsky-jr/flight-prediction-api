@@ -19,7 +19,7 @@ def getFlightSchedules(origin, destination, departure_date):
     }
 
     headers = {
-        "X-RapidAPI-Key": "8df5df34a3mshd2ba01ec055ecd0p1ab946jsn738f69d603f0",
+        "X-RapidAPI-Key": '90a9e29896mshc06e1816b7d9b53p143ee5jsn04550eb886b8',
         "X-RapidAPI-Host": "flight-info-api.p.rapidapi.com"
     }
 
