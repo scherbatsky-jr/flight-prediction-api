@@ -3,7 +3,7 @@ from flask_cors import CORS
 import requests
 import requests_cache
 import openmeteo_requests
-from retry_requests import retry
+from openmeteo_requests import retry
 from datetime import date, timedelta, datetime
 import pickle
 from dotenv import load_dotenv
