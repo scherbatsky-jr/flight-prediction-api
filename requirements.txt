@@ -4,6 +4,4 @@ requests
 numpy
 requests_cache
 openmeteo_requests
-pickle
-dotenv
 xgboost
