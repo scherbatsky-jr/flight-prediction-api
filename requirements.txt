@@ -7,3 +7,4 @@ openmeteo_requests
 xgboost
 flask_cors
 retry_requests
+dotenv
