@@ -9,8 +9,6 @@ import pickle
 from dotenv import load_dotenv
 import os
 import numpy as np
-import xgboost as xgb
-import json
 
 load_dotenv()
 

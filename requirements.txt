@@ -6,3 +6,4 @@ requests_cache
 openmeteo_requests
 xgboost
 flask_cors
+retry_requests
