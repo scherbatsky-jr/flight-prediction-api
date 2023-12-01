@@ -5,3 +5,4 @@ numpy
 requests_cache
 openmeteo_requests
 xgboost
+flask_cors
