@@ -9,6 +9,8 @@ import pickle
 from dotenv import load_dotenv
 import os
 import numpy as np
+from itertools import groupby
+from operator import itemgetter
 
 load_dotenv()
 
@@ -57,7 +59,11 @@ def parseFlightResponse(schedules):
 
         formattedFlights.append(formattedFlight)
 
-    return formattedFlights
+    sorted_flights = sorted(formattedFlights, key=itemgetter('departure_time'))
+
+    filtered_list = [next(group) for key, group in groupby(sorted_flights, key=itemgetter('departure_time'))]
+
+    return filtered_list
 
 def fillWeatherInfoForFlight(flight):
     cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
@@ -152,6 +158,7 @@ def getDelayPredictions(flights):
     regression_model = pickle.load(open('./models/regression-xg-boost-2.pkl','rb'))
 
     delay_predictions = regression_model.predict(flights_array)
+    print(delay_predictions)
 
     for index, flight in enumerate(flights):
         flight['delay_prediction'] = predictions[index]
